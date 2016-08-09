@@ -265,7 +265,7 @@ int main(int argc, char** argv)
 
         /*
         odom_transform_msg.header.frame_id = "odom";
-        odom_transform_msg.child_frame_id = "base_link";
+        odom_transform_msg.header.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
         odom_transform_msg.header.stamp = current_time;
 
         odom_transform_msg.transform.translation.x = self_x;
