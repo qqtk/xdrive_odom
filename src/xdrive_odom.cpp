@@ -1,4 +1,5 @@
-
+// use imu_angular-velocity-z *dt 'instead of ' dtheta = (d_right - d_left)/ base_width;
+// could be vibrating angular-velocity.
 #include <vector>
 #include <string>
 #include <iostream>
