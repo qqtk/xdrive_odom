@@ -115,8 +115,8 @@ int main(int argc, char** argv)
 	var_Vlin =0.0;
 	var_Vang =0.0;
 
-    ros::init(argc, argv, "xdrive_ticks_odom_node" );
-    ROS_INFO("xdrive_ticks_odom_node starting");
+    ros::init(argc, argv, "xdrive_odom_imuz_node" );
+    ROS_INFO("xdrive_odom_imuz_node starting");
 
     ros::NodeHandle nh;
     // ros::NodeHandle nh_private("~").
