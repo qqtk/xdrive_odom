@@ -185,7 +185,7 @@ int main(int argc, char** argv)
   ROS_INFO("serial connection _ not-use");
   ros::Subscriber cmdvel_sub = nh.subscribe("cmd_vel", 20, cmdvel_Callback);
 
-  ros::Subscriber imu_sub = n.subscribe("imu_frame_id_", 50, imu_yawrate_callback);
+  ros::Subscriber imu_sub = nh.subscribe("imu_frame_id_", 50, imu_yawrate_callback);
   //  ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::ticks>("/ticks", 20);
   ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::encoders>("/ticksLR", 20);
   // ros::Publisher ticksLR4_pub = nh.advertise<encoder_test::ticks>("/ticks", 20);
@@ -285,7 +285,6 @@ int main(int argc, char** argv)
         geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(self_th);
         // or' odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0,0,self_th);
 
-        /*
         odom_transform_msg.header.frame_id = "odom";
         odom_transform_msg.header.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
         odom_transform_msg.header.stamp = current_time;
@@ -297,12 +296,13 @@ int main(int argc, char** argv)
 
         // publishing the odometry and the tf: odom/ base_link
         odom_tf_broadcaster.sendTransform(odom_transform_msg);
-        */
-      odom_tf_broadcaster.sendTransform(
+      
+      /* odom_tf_broadcaster.sendTransform(
         tf::StampedTransform(
           tf::Transform( odom_quat, tf::Vector3(self_x, self_y, 0.0) ),
           current_time, "odom", "base_link")
-      );
+      ); 
+      */
         // publish the /odom topic
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
