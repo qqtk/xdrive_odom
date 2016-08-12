@@ -56,14 +56,14 @@ int main(int argc, char** argv){
 
    float x_bias; 
    if(!private_n->getParam("x_bias", x_bias)) { 
-         ROS_WARN("Not provided: x_bias. Default=-0.30"); 
-         x_bias  = -0.3;
+         ROS_WARN("Not provided: x_bias. Default=-0.25"); 
+         x_bias  = -0.25;
    }
     // nh_private.param("wheel_diam", d_diam, 0.262); 
    float z_bias; 
    if(!private_n->getParam("z_bias", x_bias)) { 
          ROS_WARN("Not provided: z_bias. Default=0.38"); 
-         x_bias  = 0.38;
+         x_bias  = 0.43;
    }
 
   while(nh.ok()){
