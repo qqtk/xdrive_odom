@@ -26,6 +26,7 @@
 // #include "xdrive_ticks_odom/xdriver.h"
 
 ros::Time current_time, last_time;
+double imu_z = 0.0;
 
 #define M_PIpi 3.1415926
 double base_width, ticks_per_meter;
@@ -93,6 +94,16 @@ void cmdvel_Callback(const geometry_msgs::Twist::ConstPtr& cmdvel_msg)
 }
 // #if 1 # endif // a=JunZhen
 
+void imu_yawrate_callback( const sensor_msgs::Imu& imu)
+{
+    //  filter out imu noise
+  if(imu.angular_velocity.z > -0.003 && imu.angular_velocity.z < 0.003)   {
+    imu_z = 0.00;
+  }
+  else {
+    imu_z = imu.angular_velocity.z;
+  }
+}
 int main(int argc, char** argv)
 {
     char strBuf[100];
@@ -144,6 +155,12 @@ int main(int argc, char** argv)
         d_diam  = 0.262;
     }
 
+    std::string imu_frame_id_;
+    if(!private_n->getParam("imu_frame_id", imu_frame_id_)) {
+        ROS_WARN("No imu_frame_id provided - default: quatIMU");
+        imu_frame_id_ = "quatIMU";
+    }
+
     // bool swap_tickLR_flag;
     // if(!private_n->getParam("swap_tickLR", swap_tickLR_flag)) {
     //    ROS_WARN("Not provided: swap_tickLR_. Default=false");
@@ -166,6 +183,7 @@ int main(int argc, char** argv)
   ROS_INFO("serial connection _ not-use");
   ros::Subscriber cmdvel_sub = nh.subscribe("cmd_vel", 20, cmdvel_Callback);
 
+  ros::Subscriber imu_sub = n.subscribe("imu_frame_id_", 50, imu_yawrate_callback);
   //  ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::ticks>("/ticks", 20);
   ros::Publisher ticksLR_pub = nh.advertise<robbase_msg::encoders>("/ticksLR", 20);
   // ros::Publisher ticksLR4_pub = nh.advertise<encoder_test::ticks>("/ticks", 20);
@@ -177,9 +195,8 @@ int main(int argc, char** argv)
   //  cmd_vel_pub  = nh.advertise<robbase_msg::WheelSpeed>("/wheelspeed", 10);
 
   // struct qch.rwheelmotor
-
-  // ros::Duration dur_time;
   robbase_msg::encoders ticksMsg;
+  // ros::Duration dur_time;
 
   tf::TransformBroadcaster odom_tf_broadcaster;
   geometry_msgs::TransformStamped odom_transform_msg;
@@ -199,7 +216,6 @@ int main(int argc, char** argv)
         xdriver_setValue_float("Vang", var_Vang);
 
         xdriver_get("tickA", &tick_vec, 16);
-        // tick_vec.tick_rb =  xdriver_getValue("tickrb");
         // tick_vec.tick_lf = xdriver_getValue("ticklf") * rwheeltick_positive_factor * (-1);
         // tick_vec.tick_rb = xdriver_getValue("tickrb") * rwheeltick_positive_factor;
 
@@ -243,7 +259,11 @@ int main(int argc, char** argv)
         // distance traveled as average of both wheels
         // this approximation works (in radians) for small angles
         dist = (d_left + d_right)/2;
-        dtheta = (d_right - d_left)/ base_width;
+        // dtheta = imu_z * elapsed_dt; // only when (first_tick_try_flag == false)
+        if  (first_tick_try_flag == false)
+           dtheta = imu_z * elapsed_dt;
+        else
+           dtheta = (d_right - d_left)/ base_width;
         //calculate velocities
         dx = dist / elapsed_dt;
         dr = dtheta / elapsed_dt;
@@ -294,7 +314,11 @@ int main(int argc, char** argv)
         odom.child_frame_id = "base_link";
         odom.twist.twist.linear.x = dx;
         odom.twist.twist.linear.y = 0;
-        odom.twist.twist.angular.z = dr;
+
+        if  (first_tick_try_flag == false)
+           odom.twist.twist.angular.z = imu_z;
+        else
+           odom.twist.twist.angular.z = dr;
         // pose.cov
         odom.pose.covariance[0]  = 0.01;
         odom.pose.covariance[7]  = 0.01;
