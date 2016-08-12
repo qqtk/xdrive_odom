@@ -17,6 +17,7 @@
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Quaternion.h>
+#include <sensor_msgs/Imu.h>
 
 #include "robbase_msg/encoders.h"
 #include "robbase_msg/WheelSpeed.h"
