@@ -66,12 +66,15 @@ include_directories(include
 ## either from message generation or dynamic reconfigure
 # add_dependencies(encoder_test ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-## Declare a C++ executable
-add_executable(xdrive_odom_node src/xdrive_odom.cpp)
-
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(encoder_test_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+## Declare a C++ executable
+add_executable(xdrive_odom_node src/xdrive_odom.cpp)
+
+add_executable(baselaser_tf_node src/baselaser_tf.cpp)
+target_link_libraries(baselaser_tf_node ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(xdrive_odom_node
