@@ -286,8 +286,8 @@ int main(int argc, char** argv)
         // or' odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0,0,self_th);
 
         odom_transform_msg.header.frame_id = "odom";
-        odom_transform_msg.header.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
         odom_transform_msg.header.stamp = current_time;
+        // odom_transform_msg.header.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
 
         odom_transform_msg.transform.translation.x = self_x;
         odom_transform_msg.transform.translation.y = self_y;
