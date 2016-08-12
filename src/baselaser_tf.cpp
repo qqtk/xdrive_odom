@@ -42,6 +42,12 @@ int main(int argc, char** argv){
   ros::Rate r(50);
 
   tf::TransformBroadcaster baselaser_broadcaster;
+   int baselaser_tf_freq; 
+   if(!private_n->getParam("tf_freq", baselaser_tf_freq)) { 
+         ROS_WARN("Not provided: w_bias. Default=50"); 
+         baselaser_tf_freq = 50;
+   }
+
    float w_bias; 
    if(!private_n->getParam("w_bias", w_bias)) { 
          ROS_WARN("Not provided: w_bias. Default=-1.0==M_PI"); 
