@@ -290,9 +290,9 @@ int main(int argc, char** argv)
         geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(self_th);
         // or' odom_quat = tf::createQuaternionMsgFromRollPitchYaw(0,0,self_th);
 
-        odom_transform_msg.header.frame_id = "odom";
+        odom_transform_msg.header.frame_id = odom_frame_id_; // "odom";
         odom_transform_msg.header.stamp = current_time;
-        // odom_transform_msg.header.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
+        odom_transform_msg.child_frame_id = "base_link"; // added "header." y16m8d09.noon"
 
         odom_transform_msg.transform.translation.x = self_x;
         odom_transform_msg.transform.translation.y = self_y;
@@ -311,7 +311,7 @@ int main(int argc, char** argv)
         // publish the /odom topic
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
-        odom.header.frame_id = "odom";
+        odom.header.frame_id = odom_frame_id_; // "odom";
         //set the position
         odom.pose.pose.position.x = self_x;
         odom.pose.pose.position.y = self_y;
