@@ -49,9 +49,14 @@ int main(int argc, char** argv){
    }
 
    float w_bias; 
-   if(!private_n->getParam("w_bias", w_bias)) { 
-         ROS_WARN("Not provided: w_bias. Default=-1.0==M_PI"); 
-         w_bias = -1.0;
+   if(!private_n->getParam("quat_w_bias", w_bias)) { 
+         ROS_WARN("Not provided: quat_w_bias. Default=0==M_PI"); 
+         w_bias = 0;
+   }
+   float quat_z_bias; 
+   if(!private_n->getParam("quat_z_bias", quat_z_bias)) { 
+         ROS_WARN("Not provided: quat_z_bias. Default=1==M_PI"); 
+         quat_z_bias = 1;
    }
 
    float x_bias; 
@@ -63,13 +68,13 @@ int main(int argc, char** argv){
    float z_bias; 
    if(!private_n->getParam("z_bias", x_bias)) { 
          ROS_WARN("Not provided: z_bias. Default=0.38"); 
-         x_bias  = 0.43;
+         z_bias  = 0.43;
    }
 
   while(nh.ok()){
     baselaser_broadcaster.sendTransform(
       tf::StampedTransform(
-        tf::Transform(tf::Quaternion(0, 0, 0, w_bias), tf::Vector3(x_bias, 0.0, z_bias)),
+        tf::Transform(tf::Quaternion(0, 0, quat_z_bias, w_bias), tf::Vector3(x_bias, 0.0, z_bias)),
         ros::Time::now(),"base_link", "laser"));
     r.sleep();
   }
